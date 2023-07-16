@@ -38,10 +38,3 @@ plot_train_data(axis[0])
 plot_test_data(axis[1])
 plt.show()
 
-
-
-
-
-
-print(y_pre)
-print(y_test)
