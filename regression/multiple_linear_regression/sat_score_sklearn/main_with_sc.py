@@ -6,26 +6,21 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score, r2_score
 from sklearn.feature_selection import f_regression
 from sklearn.preprocessing import StandardScaler
-sns.set()
 
 dataset = pd.read_csv("1.02. Multiple linear regression.csv")
 X = dataset.iloc[:, :-1]
 y = dataset.iloc[:, -1]
 
-
+sc = StandardScaler()
+X = sc.fit_transform(X)
 
 lr = LinearRegression()
 lr.fit(X, y)
 
-r2 = 1 - lr.score(X, y)
-n = X.shape[0]
-p = X.shape[1]
+lr_summary = pd.DataFrame([["Intercept", lr.intercept_], ["SAT", lr.coef_[0]], ["Rand 1,2,3", lr.coef_[1]]], columns=["Features", "Weights"])
 
-adjusted_r2 = 1 - r2 * (n-1)/(n-p-1)
+new_data = pd.DataFrame([[1700, 2], [1800, 1]], columns=["SAT", "Rand 1,2,3"])
+new_data_scaled = sc.transform(new_data)
 
-p_values = f_regression(X, y)[1].round(3)
-
-lr_summary = pd.DataFrame(data=X.columns.values, columns=["Features"])
-lr_summary["Coefficients"] = lr.coef_
-lr_summary["p-values"] = p_values.round(3)
-print(lr_summary)
+y_pred = lr.predict(new_data_scaled)
+print(y_pred)
